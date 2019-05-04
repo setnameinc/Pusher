@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="DECODER_CODE">1</integer>
+    <integer name="ALARM_CODE">2</integer>
+    <integer name="CAMERA_REQUEST_CODE">100</integer>
+</resources>
