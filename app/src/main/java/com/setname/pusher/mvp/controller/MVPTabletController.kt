@@ -1,93 +1,108 @@
 package com.setname.pusher.mvp.controller
 
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-
-class MainActivity : AppCompatActivity(), InteractionsMainActivity {
-
-    private val mvpTabletController = MVPTabletController(this)
-
-    fun setMessage(str: String){
-
-        mvpTabletController.setMessage(str)
-
-    }
-}
+import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
+import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.retfrofit.PushoverClient
+import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
+import com.setname.pusher.mvp.utils.context.AppContext
+import com.setname.pusher.mvp.utils.dbinteractions.InteractionsWithDatabase
+import java.util.*
+import java.util.logging.Logger
 
 class MVPTabletController(private val interactionsMainActivity: InteractionsMainActivity) {
 
+    private val logger by lazy {
+
+        Logger.getLogger("MVPTabletController")
+
+    }
+
+    private val pusherAPIService by lazy {
+
+        PushoverClient()
+
+    }
+
+    private val interactionsWithDB by lazy {
+
+        InteractionsWithDatabase(context)
+
+    }
+
+    private val currentTime by lazy {
+
+        Calendar.getInstance().time.time
+
+    }
+
+    private val context by lazy {
+        AppContext.applicationContext()
+    }
+
     private val tabletPresenter = TabletPresenter(this)
 
-    fun setMessage(str:String){
+    fun changeFragment(fragment: Fragment){
+
+        interactionsMainActivity.changeFragment(fragment)
+
+    }
+
+    fun setMessagesList() {
+
+        fun setDataForRV(list: List<MessagesDatabaseModel>) {
+
+            tabletPresenter.setDataForRV(list)
+
+        }
 
         tabletPresenter.setTablePresenter()
-        tabletPresenter.setMessage(str)
+
+        setDataForRV(interactionsWithDB.getAll())
 
     }
 
-}
+    fun createMessage(){
 
-class TabletPresenter(private val tableController: MVPTabletController) {
-
-    private val messageListPresenter = MessageListPresenter()
-
-    fun setMessage(str:String){
-
-        messageListPresenter.setMessage(str)
+        tabletPresenter.createMessage()
 
     }
 
-    fun completeSetMessage(){
+    fun addCreateMessageView(){
 
-        println("complete")
-
-    }
-
-    fun setTablePresenter() {
-
-        messageListPresenter.setFragment(this)
+        tabletPresenter.addCreateMessageView()
 
     }
 
-}
+    fun setOpenCreateViewClickListener(){
 
-class MessageListPresenter {
-
-    fun setMessage(str:String){
-
-        fragment.setMessage(str)
+        interactionsMainActivity.setOpenCreateViewClickListener()
 
     }
 
-    fun setFragment(tabletPresenter:TabletPresenter){
+    fun sentDataToDB(model: MessagesDatabaseModel){
 
-        fragment = FragmentMessages()
-        fragment.setTabletPresenter(tabletPresenter)
+        interactionsWithDB.insertMessage(model)
 
     }
 
-    private lateinit var fragment:FragmentMessages
+    init {
 
-}
+        /*fun setSetsOfBroadcastReceivers(){
 
-class FragmentMessages:Fragment() {
+            val list = interactionsWithDB.getAllByTime(currentTime)
 
-    fun setTabletPresenter(tabletPresenter:TabletPresenter) {
-        this.tabletPresenter = tabletPresenter
+            if (list.isNotEmpty()){
+
+                list.forEach { masterView.startSentMessageReceiver(it) }
+
+            }
+
+        }
+
+
+        setSetsOfBroadcastReceivers()*/
+
     }
 
-    private lateinit var tabletPresenter:TabletPresenter
-
-    fun setMessage(str: String){
-        println(str)
-        tabletPresenter.completeSetMessage()
-    }
-
-}
-
-interface InteractionsMainActivity{
-
-}
-interface InteractionsTabletPresenter{
-    fun setTabletPresenter(tabletPresenter:TabletPresenter)
 }

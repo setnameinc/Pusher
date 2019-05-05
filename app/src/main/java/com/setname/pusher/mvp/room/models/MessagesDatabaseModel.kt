@@ -9,11 +9,9 @@ import org.json.JSONObject
 
 
 @Entity(tableName = "messages")
-@Parcelize
 data class MessagesDatabaseModel(
     @PrimaryKey(autoGenerate = true) val time: Long,
     @TypeConverters(JSONObject::class) val main: MessageMainModel
-): Parcelable
+)
 
-@Parcelize
-data class MessageMainModel(val message: String): Parcelable
+data class MessageMainModel(val message: String)

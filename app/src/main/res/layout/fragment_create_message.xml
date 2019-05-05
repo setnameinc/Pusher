@@ -28,16 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_create_message_message_text_view" />
 
-    <ImageView
-            android:id="@+id/activity_create_message_floating_button"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="16dp"
-            android:src="@mipmap/ic_confirm"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
     <EditText
             android:id="@+id/activity_create_message_message_edit_text"
             android:layout_width="0dp"

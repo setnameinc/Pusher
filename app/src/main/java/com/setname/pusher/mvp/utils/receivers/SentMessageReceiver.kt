@@ -29,11 +29,7 @@ class SentMessageReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        val messagesDatabaseModel = intent?.getParcelableExtra<MessagesDatabaseModel>("model")
-
         /*Log.i("MainActivityLog","model = ${messagesDatabaseModel}")*/
-
-        Log.i("MainActivityLog", "2 = ${intent?.extras}")
 
         /*val responce = pusherAPIService.postMessageUsingRetrofit("sdf")
 
