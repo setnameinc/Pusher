@@ -1,15 +1,15 @@
 package com.setname.pusher.mvp.presenter
 
+import com.setname.pusher.mvp.masterview.MasterView
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessageMainModel
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
 import com.setname.pusher.mvp.utils.dbinteractions.InteractionsWithDatabase
-import com.setname.pusher.mvp.views.main.InteractionsWithMainView
 import java.util.*
 import java.util.logging.Logger
 
-class MainPresenter(private val mainView: InteractionsWithMainView) {
+class MainPresenter(private val masterView: MasterView) {
 
 
     private val logger by lazy {
@@ -44,7 +44,7 @@ class MainPresenter(private val mainView: InteractionsWithMainView) {
 
         setSetsOfBroadcastReceivers()
 
-        mainView.setFragmentMessages(interactionsWithDB.getAll())
+        masterView.setFragmentMessages(interactionsWithDB.getAll())
 
         /*insertTest()*/
 
@@ -56,7 +56,7 @@ class MainPresenter(private val mainView: InteractionsWithMainView) {
 
          if (list.isNotEmpty()){
 
-             list.forEach { mainView.startSentMessageReceiver(it) }
+             list.forEach { masterView.startSentMessageReceiver(it) }
 
          }
 

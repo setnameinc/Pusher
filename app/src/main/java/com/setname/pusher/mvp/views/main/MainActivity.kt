@@ -6,32 +6,25 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import com.setname.pusher.R
-import com.setname.pusher.mvp.presenter.MainPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
-import com.setname.pusher.mvp.views.fragments.main_container.FragmentCreateMessage
 import com.setname.pusher.mvp.views.fragments.main_container.FragmentMessagesList
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), InteractionsWithMainView{
+class MainActivity : AppCompatActivity(), InteractionsWithMainActivity {
 
-    private lateinit var presenter: MainPresenter
+    private val fragmentMessageList = FragmentMessagesList()
 
     override fun setFragmentMessages(list: List<MessagesDatabaseModel>) {
 
         val bundle = Bundle()
         bundle.putParcelable("list", ParcelableMessagesList(list))
-        val fragment = FragmentMessagesList()
-        fragment.arguments = bundle
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
+        fragmentMessageList.arguments = bundle
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, fragmentMessageList).commit()
 
     }
 
@@ -62,13 +55,11 @@ class MainActivity : AppCompatActivity(), InteractionsWithMainView{
 
         ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)
 
-        presenter = MainPresenter(this)
-
     }
 
 }
 
-interface InteractionsWithMainView {
+interface InteractionsWithMainActivity {
 
     fun startSentMessageReceiver(model: MessagesDatabaseModel)
     fun setFragmentMessages(list: List<MessagesDatabaseModel>)

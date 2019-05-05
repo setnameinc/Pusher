@@ -65,4 +65,10 @@ class FragmentCreateMessage : Fragment() {
 
 }
 
+interface InteractionsWithCreateMessage{
+
+
+
+}
+
 
