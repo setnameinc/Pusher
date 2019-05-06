@@ -14,13 +14,16 @@ interface PusherDAO {
     @Query("SELECT * FROM messages WHERE time >= :time")
     fun getAllByTime(time: Long): List<MessagesDatabaseModel>
 
-    @Query("SELECT * FROM messages")
+    @Query("SELECT * FROM messages ORDER BY time DESC")
     fun getAll(): List<MessagesDatabaseModel>
-
-    @Query("SELECT (time) FROM messages WHERE time <= :time + 900 AND time >= :time + 900")
-    fun getByTime(time: Long): Long
 
     @Query("UPDATE messages SET posted = 1 WHERE time = :time ")
     fun changeStatus(time: Long)
+
+    @Query("SELECT * FROM messages WHERE posted == 0")
+    fun getAllNotPostedPushes():List<MessagesDatabaseModel>
+
+    @Query("SELECT * FROM messages WHERE time = :time")
+    fun getById(time: Long):MessagesDatabaseModel
 
 }

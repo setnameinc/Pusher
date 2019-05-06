@@ -8,7 +8,7 @@
     <application
             android:name=".mvp.utils.context.AppContext"
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/ic_pusher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
@@ -21,8 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.setname.pusher.mvp.views.qrreader.DecoderActivity"/>
-        <receiver android:name=".mvp.utils.receivers.SentMessageReceiver"/>
-        <activity android:name=".mvp.views.fragments.main_container.CreateMessageFragment"/>
+        <receiver android:name=".mvp.utils.workers.SentMessageWorker"/>
         <meta-data
                 android:name="preloaded_fonts"
                 android:resource="@array/preloaded_fonts" />

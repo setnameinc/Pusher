@@ -50,13 +50,9 @@ class DisplayMessagesFragment : Fragment() {
 
     fun setDataForRecyclerView(messagesList: List<MessagesDatabaseModel>) {
 
-        Log.i("MVP", "messagesList = ${messagesList.size}")
-
         list.clear()
         list.addAll(messagesList)
         messageAdapter.notifyDataSetChanged()
-
-        Log.i("MVP", "list = ${list.size}")
 
     }
 

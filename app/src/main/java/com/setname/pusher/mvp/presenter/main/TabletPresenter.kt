@@ -4,15 +4,15 @@ import android.support.v4.app.Fragment
 import com.setname.pusher.mvp.controller.MVPTabletController
 import com.setname.pusher.mvp.presenter.fragment.create.CreateMessagePresenter
 import com.setname.pusher.mvp.presenter.fragment.display.DisplayMessagesPresenter
-import com.setname.pusher.mvp.presenter.receivers.SentMessagesPresenter
+import com.setname.pusher.mvp.presenter.workers.SentMessageWorkerPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
-import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
+import com.setname.pusher.mvp.utils.workers.SentMessageWorker
 
 class TabletPresenter(private val mvpTabletController: MVPTabletController) {
 
     private val messageListPresenter = DisplayMessagesPresenter()
     private val createMessagePresenter = CreateMessagePresenter()
-    private val sendMessagePresenter = SentMessagesPresenter()
+    private val sendMessagePresenter = SentMessageWorkerPresenter()
 
     fun changeFragment(fragment:Fragment){
 
@@ -50,42 +50,22 @@ class TabletPresenter(private val mvpTabletController: MVPTabletController) {
 
     }
 
-    fun loadMessageList(){
-
-        mvpTabletController.loadMessagesList()
-
-    }
-
     fun updateDisplayMessage(){
 
         mvpTabletController.loadMessagesList()
 
     }
 
-    fun changeStatus(time: Long){
+    fun startSentMessageWorker(){
 
-        mvpTabletController.changeStatus(time)
-
-    }
-
-    fun startSendService(){
-
-        sendMessagePresenter.addListSentMessageReceiver(mvpTabletController.loadMessagesForStartServices(), this)
+        sendMessagePresenter.initSentMessageWorkerPresenter(this)
+        sendMessagePresenter.addAllWorkers(mvpTabletController.loadMessagesForStartServices())
 
     }
 
-    fun addSendService(time: Long){
+    fun setWorkers(list:List<Long>){
 
-        sendMessagePresenter.addSentMessageReceiver(time, this)
-
-    }
-
-
-    fun startSentMessageReceiver(time:Long, sentMessageReceiver: SentMessageReceiver){
-
-        mvpTabletController.startSentMessageReceiver(time, sentMessageReceiver)
-
-        sendMessagePresenter.setExtraDataForMessageReceiver(sentMessageReceiver)
+        mvpTabletController.setWorkers(list)
 
     }
 

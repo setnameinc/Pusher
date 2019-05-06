@@ -20,6 +20,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+            android:id="@+id/activity_create_message_message_calendar_view"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:src="@mipmap/ic_calendar"
+            app:layout_constraintBottom_toTopOf="@+id/activity_create_message_message_image_view"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
             android:id="@+id/activity_create_message_message_image_view"
             android:layout_width="28dp"
             android:layout_height="28dp"

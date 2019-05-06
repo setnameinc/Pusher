@@ -16,7 +16,7 @@ class PushoverClient {
 
     }
 
-    fun postMessageUsingRetrofit(msg:String): Deferred<Response<PostModel>> =
+     fun postMessageUsingRetrofit(msg:String): Deferred<Response<PostModel>> =
 
         apiService.postMessageAsync(PostModel(DEVELOPER_KEY, CLIENT_KEY, msg))
 

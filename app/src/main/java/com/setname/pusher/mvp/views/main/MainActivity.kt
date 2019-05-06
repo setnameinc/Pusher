@@ -1,9 +1,6 @@
 package com.setname.pusher.mvp.views.main
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
+import android.app.job.JobInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -12,11 +9,88 @@ import android.util.Log
 import com.setname.pusher.R
 import com.setname.pusher.mvp.controller.MVPTabletController
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
-import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
+import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
+import com.setname.pusher.mvp.utils.workers.SentMessageWorker
 import com.setname.pusher.mvp.views.fragments.main_container.CreateMessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+import java.util.concurrent.TimeUnit
+import androidx.work.*
 
 class MainActivity : AppCompatActivity(), InteractionsMainActivity {
+
+    private val internetConnection = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
+
+    override fun setWork(model: MessagesDatabaseModel) {
+
+        val time = model.time
+
+        val timeToPush = if (time - System.currentTimeMillis() >= 0) time - System.currentTimeMillis() else 0
+
+        val work =
+            OneTimeWorkRequest.Builder(SentMessageWorker::class.java)
+                .setConstraints(internetConnection)
+                .setInitialDelay(timeToPush, TimeUnit.MILLISECONDS).build()
+
+        setObserver(work.id, time)
+
+        workManager.enqueue(work)
+
+    }
+
+    override fun setWorkers(list: List<Long>) {
+
+        var listOfOneTimeWorkRequest = mutableListOf<OneTimeWorkRequest>()
+
+        val internetConnection = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        for (time in list) {
+
+            val timeToPush = if (time - System.currentTimeMillis() >= 0) time - System.currentTimeMillis() else 0
+
+            val work =
+                OneTimeWorkRequest.Builder(SentMessageWorker::class.java)
+                    .setInitialDelay(timeToPush, TimeUnit.MILLISECONDS)
+                    .setConstraints(internetConnection)
+                    .build()
+
+            setObserver(work.id, time)
+
+            listOfOneTimeWorkRequest.add(work)
+
+        }
+
+        workManager.enqueue(listOfOneTimeWorkRequest)
+
+    }
+
+    private fun setObserver(id: UUID, time: Long) {
+
+        workManager.getStatusById(id).observe(this, android.arch.lifecycle.Observer {
+
+            when (it?.state) {
+
+                State.SUCCEEDED -> {
+
+                    mvpTabletController.changeStatus(time)
+
+                }
+
+                State.CANCELLED -> {
+
+                    Log.i("MainActLog", "checkIntCon")
+
+                }
+
+            }
+
+        })
+
+    }
 
     override fun setOpenCreateViewClickListener() {
         setButtonToCreateMessageFragment()
@@ -76,17 +150,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
     private val mvpTabletController = MVPTabletController(this)
 
-    override fun sentMessageReceiver(time: Long, messageReceiver: SentMessageReceiver) {
-
-        val ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val intent = Intent(this, messageReceiver::class.java)
-
-        val pendingIntent = PendingIntent.getBroadcast(this, ALARM_CODE, intent, 0)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
-
-    }
+    private val workManager = WorkManager.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +160,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
         setButtonToCreateMessageFragment()
 
-        mvpTabletController.startSendService()
+        mvpTabletController.startSentMessageWorker()
 
 /*
         ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)

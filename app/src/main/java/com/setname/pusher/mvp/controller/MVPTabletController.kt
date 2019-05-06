@@ -8,7 +8,12 @@ import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
 import com.setname.pusher.mvp.utils.dbinteractions.InteractionsWithDatabase
-import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.logging.Logger
 
@@ -50,11 +55,11 @@ class MVPTabletController(private val interactionsMainActivity: InteractionsMain
 
     }
 
-    fun loadMessagesForStartServices() = interactionsWithDB.getAllByTime(System.currentTimeMillis())
+    fun loadMessagesForStartServices() = interactionsWithDB.getAllNotPostedPushes()
 
-    fun startSentMessageReceiver(time:Long, sentMessageReceiver: SentMessageReceiver){
+    fun setWorkers(list: List<Long>) {
 
-        interactionsMainActivity.sentMessageReceiver(time, sentMessageReceiver)
+        interactionsMainActivity.setWorkers(list)
 
     }
 
@@ -87,38 +92,49 @@ class MVPTabletController(private val interactionsMainActivity: InteractionsMain
         interactionsWithDB.insertMessage(model)
         interactionsMainActivity.setOpenCreateViewClickListener()
         tabletPresenter.updateDisplayMessage()
-        tabletPresenter.addSendService(model.time)
+        interactionsMainActivity.setWork(model)
 
     }
 
-    fun changeStatus(time: Long){
+    fun changeStatus(time: Long) {
 
-        interactionsWithDB.changeStatus(interactionsWithDB.getByTime(time))
+        CoroutineScope(Dispatchers.Main).launch {
 
-    }
+            val request =
+                pusherAPIService.postMessageUsingRetrofit(interactionsWithDB.getById(time).main.message)
 
-    fun startSendService(){
+            withContext(IO) {
 
-        tabletPresenter.startSendService()
+                val response = request.await()
 
-    }
+                if (response.isSuccessful) {
 
-    init {
+                    Log.i("MVP", "complete")
 
-        /*fun setSetsOfBroadcastReceivers(){
+                    interactionsWithDB.changeStatus(time)
 
-            val list = interactionsWithDB.getAllByTime(currentTime)
+                    withContext(Main){
+                        tabletPresenter.updateDisplayMessage()
+                    }
 
-            if (list.isNotEmpty()){
+                } else {
 
-                list.forEach { masterView.startSentMessageReceiver(it) }
+                    Log.i("MVP", "error ${response.errorBody()}")
+
+                }
 
             }
 
         }
 
 
-        setSetsOfBroadcastReceivers()*/
+        //
+
+    }
+
+    fun startSentMessageWorker() {
+
+        tabletPresenter.startSentMessageWorker()
 
     }
 
