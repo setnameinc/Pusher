@@ -4,12 +4,15 @@ import android.support.v4.app.Fragment
 import com.setname.pusher.mvp.controller.MVPTabletController
 import com.setname.pusher.mvp.presenter.fragment.create.CreateMessagePresenter
 import com.setname.pusher.mvp.presenter.fragment.display.DisplayMessagesPresenter
+import com.setname.pusher.mvp.presenter.receivers.SentMessagesPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
+import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
 
 class TabletPresenter(private val mvpTabletController: MVPTabletController) {
 
     private val messageListPresenter = DisplayMessagesPresenter()
     private val createMessagePresenter = CreateMessagePresenter()
+    private val sendMessagePresenter = SentMessagesPresenter()
 
     fun changeFragment(fragment:Fragment){
 
@@ -43,9 +46,46 @@ class TabletPresenter(private val mvpTabletController: MVPTabletController) {
 
     fun sentDataToDB(model: MessagesDatabaseModel){
 
-        /*mvpTabletController.sentDataToDB(model)*/
+        mvpTabletController.sentDataToDB(model)
 
-        mvpTabletController.setOpenCreateViewClickListener()
+    }
+
+    fun loadMessageList(){
+
+        mvpTabletController.loadMessagesList()
+
+    }
+
+    fun updateDisplayMessage(){
+
+        mvpTabletController.loadMessagesList()
+
+    }
+
+    fun changeStatus(time: Long){
+
+        mvpTabletController.changeStatus(time)
+
+    }
+
+    fun startSendService(){
+
+        sendMessagePresenter.addListSentMessageReceiver(mvpTabletController.loadMessagesForStartServices(), this)
+
+    }
+
+    fun addSendService(time: Long){
+
+        sendMessagePresenter.addSentMessageReceiver(time, this)
+
+    }
+
+
+    fun startSentMessageReceiver(time:Long, sentMessageReceiver: SentMessageReceiver){
+
+        mvpTabletController.startSentMessageReceiver(time, sentMessageReceiver)
+
+        sendMessagePresenter.setExtraDataForMessageReceiver(sentMessageReceiver)
 
     }
 

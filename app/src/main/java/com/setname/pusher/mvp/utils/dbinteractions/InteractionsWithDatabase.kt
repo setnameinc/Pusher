@@ -20,4 +20,8 @@ class InteractionsWithDatabase(context: Context) {
 
     fun getAll() = pusherDAO.getAll()
 
+    fun getByTime(time: Long) = pusherDAO.getByTime(time)
+
+    fun changeStatus(time: Long) = pusherDAO.changeStatus(time)
+
 }

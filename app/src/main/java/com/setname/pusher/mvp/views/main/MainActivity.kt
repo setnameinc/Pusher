@@ -1,5 +1,9 @@
 package com.setname.pusher.mvp.views.main
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -8,6 +12,7 @@ import android.util.Log
 import com.setname.pusher.R
 import com.setname.pusher.mvp.controller.MVPTabletController
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
+import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
 import com.setname.pusher.mvp.views.fragments.main_container.CreateMessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
             is CreateMessageFragment -> {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
                     .add(R.id.main_container, fragment)
                     .commit()
                 setButtonToDisplayMessagesFragment()
@@ -49,7 +55,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
             isClickable = false
             setOnClickListener { mvpTabletController.addCreateMessageView() }
-            background = ContextCompat.getDrawable(context, R.mipmap.ic_confirm)
+            background = ContextCompat.getDrawable(context, R.mipmap.ic_add)
             isClickable = true
 
         }
@@ -61,7 +67,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
             isClickable = false
             setOnClickListener { mvpTabletController.createMessage() }
-            background = ContextCompat.getDrawable(context, R.mipmap.ic_add)
+            background = ContextCompat.getDrawable(context, R.mipmap.ic_confirm)
             isClickable = true
 
         }
@@ -70,27 +76,17 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
     private val mvpTabletController = MVPTabletController(this)
 
-    /*
-     override fun startSentMessageReceiver(model: MessagesDatabaseModel) {
+    override fun sentMessageReceiver(time: Long, messageReceiver: SentMessageReceiver) {
 
-         val ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)
-         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-         var calendar = Calendar.getInstance()
-         calendar.time = Date()
-         calendar.set(Calendar.SECOND, calendar.get(Calendar.SECOND))
+        val intent = Intent(this, messageReceiver::class.java)
 
-         var intent = Intent(this, SentMessageReceiver::class.java)
-         intent.putExtra("model", model)
+        val pendingIntent = PendingIntent.getBroadcast(this, ALARM_CODE, intent, 0)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
 
-         val pendingIntent = PendingIntent.getBroadcast(this, ALARM_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
-         Log.i("MainActivityLog", "${intent.getParcelableExtra<MessagesDatabaseModel>("model")}")
-
-     }
-
-     private var ALARM_CODE = 0*/
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +95,8 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
+
+        mvpTabletController.startSendService()
 
 /*
         ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)

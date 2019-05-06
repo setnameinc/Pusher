@@ -65,14 +65,15 @@ class CreateMessageFragment : Fragment() {
 
         /*if (activity_create_message_message_edit_text.text.toString().isNotEmpty()) {*/
 
-            Log.i("CreateMessageFragment", "nice")
+        Log.i("CreateMessageFragment", "nice")
 
-            sentModelMessagesToDB(
-                MessagesDatabaseModel(
-                    System.currentTimeMillis(),
-                    MessageMainModel(activity_create_message_message_edit_text.text.toString())
-                )
+        sentModelMessagesToDB(
+            MessagesDatabaseModel(
+                System.currentTimeMillis()+5000,
+                MessageMainModel(activity_create_message_message_edit_text.text.toString()),
+                false
             )
+        )
 
         /*}*/
 
@@ -90,7 +91,8 @@ class CreateMessageFragment : Fragment() {
 
 
         tabletPresenter.sentDataToDB(model)
-        fragmentManager?.beginTransaction()?.remove(this)?.commit()
+        fragmentManager?.beginTransaction()?.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
+            ?.remove(this)?.commit()
 
     }
 

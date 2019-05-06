@@ -1,12 +1,14 @@
 package com.setname.pusher.mvp.controller
 
 import android.support.v4.app.Fragment
+import android.util.Log
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
 import com.setname.pusher.mvp.presenter.main.TabletPresenter
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
 import com.setname.pusher.mvp.utils.dbinteractions.InteractionsWithDatabase
+import com.setname.pusher.mvp.utils.receivers.SentMessageReceiver
 import java.util.*
 import java.util.logging.Logger
 
@@ -42,47 +44,62 @@ class MVPTabletController(private val interactionsMainActivity: InteractionsMain
 
     private val tabletPresenter = TabletPresenter(this)
 
-    fun changeFragment(fragment: Fragment){
+    fun changeFragment(fragment: Fragment) {
 
         interactionsMainActivity.changeFragment(fragment)
 
     }
 
-    fun setMessagesList() {
+    fun loadMessagesForStartServices() = interactionsWithDB.getAllByTime(System.currentTimeMillis())
 
-        fun setDataForRV(list: List<MessagesDatabaseModel>) {
+    fun startSentMessageReceiver(time:Long, sentMessageReceiver: SentMessageReceiver){
 
-            tabletPresenter.setDataForRV(list)
-
-        }
-
-        tabletPresenter.setTablePresenter()
-
-        setDataForRV(interactionsWithDB.getAll())
+        interactionsMainActivity.sentMessageReceiver(time, sentMessageReceiver)
 
     }
 
-    fun createMessage(){
+    fun loadMessagesList() {
+
+        tabletPresenter.setDataForRV(interactionsWithDB.getAll())
+
+    }
+
+    fun setMessagesList() {
+
+        tabletPresenter.setTablePresenter()
+
+    }
+
+    fun createMessage() {
 
         tabletPresenter.createMessage()
 
     }
 
-    fun addCreateMessageView(){
+    fun addCreateMessageView() {
 
         tabletPresenter.addCreateMessageView()
 
     }
 
-    fun setOpenCreateViewClickListener(){
+    fun sentDataToDB(model: MessagesDatabaseModel) {
 
+        interactionsWithDB.insertMessage(model)
         interactionsMainActivity.setOpenCreateViewClickListener()
+        tabletPresenter.updateDisplayMessage()
+        tabletPresenter.addSendService(model.time)
 
     }
 
-    fun sentDataToDB(model: MessagesDatabaseModel){
+    fun changeStatus(time: Long){
 
-        interactionsWithDB.insertMessage(model)
+        interactionsWithDB.changeStatus(interactionsWithDB.getByTime(time))
+
+    }
+
+    fun startSendService(){
+
+        tabletPresenter.startSendService()
 
     }
 

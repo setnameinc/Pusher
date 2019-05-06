@@ -3,7 +3,9 @@ package com.setname.pusher.mvp.utils.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.IBinder
 import android.util.Log
+import com.setname.pusher.mvp.presenter.main.TabletPresenter
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
@@ -12,40 +14,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicLong
 
 class SentMessageReceiver : BroadcastReceiver() {
 
-    private val pusherAPIService by lazy {
-
-        PushoverClient()
-
+    fun setTabletPresenter(tabletPresenter: TabletPresenter) {
+        this.tabletPresenter = tabletPresenter
     }
 
-    private val interactionsWithDB by lazy {
-
-        InteractionsWithDatabase(AppContext.applicationContext())
-
-    }
+    private lateinit var tabletPresenter: TabletPresenter
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        /*Log.i("MainActivityLog","model = ${messagesDatabaseModel}")*/
+        /*tabletPresenter.changeStatus(System.currentTimeMillis())*/
 
-        /*val responce = pusherAPIService.postMessageUsingRetrofit("sdf")
+    }
 
-        CoroutineScope(Dispatchers.Main).launch {
+    fun setTimeForSentMessage(time:Long){
 
-            withContext(Dispatchers.Main){
+        Log.i("SentMessageReceiver","for invoke time is ${time}")
 
-                if (responce.await().isSuccessful){
-
-                    interactionsWithDB.deleteByTime(messagesDatabaseModel!!.time)//
-
-                }
-
-            }
-
-        }*/
+        tabletPresenter.startSentMessageReceiver(time, this)
 
     }
 

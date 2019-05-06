@@ -11,6 +11,7 @@ class DisplayMessagesPresenter {
         fragmentDisplay = DisplayMessagesFragment()
         fragmentDisplay.setTabletPresenter(tabletPresenter)
         fragmentDisplay.changeFragment()
+        fragmentDisplay.updateDisplayMessage()
 
     }
 
@@ -21,5 +22,11 @@ class DisplayMessagesPresenter {
     }
 
     private lateinit var fragmentDisplay: DisplayMessagesFragment
+
+    fun updateDisplayMessage(){
+
+        fragmentDisplay.updateDisplayMessage()
+
+    }
 
 }
