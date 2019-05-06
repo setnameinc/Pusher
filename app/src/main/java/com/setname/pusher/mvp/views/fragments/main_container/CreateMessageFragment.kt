@@ -1,13 +1,17 @@
 package com.setname.pusher.mvp.views.fragments.main_container
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import com.setname.pusher.R
 import com.setname.pusher.mvp.presenter.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessageMainModel
@@ -16,17 +20,11 @@ import com.setname.pusher.mvp.utils.context.AppContext
 import com.setname.pusher.mvp.views.qrreader.DecoderActivity
 import kotlinx.android.synthetic.main.fragment_create_message.*
 import kotlinx.android.synthetic.main.fragment_create_message.view.*
-import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.support.v4.content.ContextCompat.getSystemService
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
-import android.widget.DatePicker
 import java.util.*
 
 class CreateMessageFragment : Fragment() {
 
-    private val myCalendar = Calendar.getInstance()
+    private val calendar = Calendar.getInstance()
 
     fun setTabletPresenter(tabletPresenter: TabletPresenter) {
         this.tabletPresenter = tabletPresenter
@@ -37,6 +35,11 @@ class CreateMessageFragment : Fragment() {
     private lateinit var createView: View
 
     private var DECODER_CODE = AppContext.applicationContext().resources.getInteger(R.integer.DECODER_CODE)
+
+    init {
+        calendar.time = Date()
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 5)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -53,18 +56,11 @@ class CreateMessageFragment : Fragment() {
 
         }
 
-        createView.activity_create_message_message_calendar_view.setOnClickListener{
+        updateDateView()
 
-            val date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-
-                myCalendar.set(Calendar.YEAR, year)
-                myCalendar.set(Calendar.MONTH, monthOfYear)
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-            }
-            
-
-        }
+/*
+        setCalendarImageClickListener()
+*/
 
     }
 
@@ -84,17 +80,62 @@ class CreateMessageFragment : Fragment() {
         }
     }
 
+    private fun setCalendarImageClickListener() {
+
+        createView.activity_create_message_message_calendar_view.setOnClickListener {
+
+            val timeListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                calendar.set(Calendar.MINUTE, minute)
+
+                updateDateView()
+
+            }
+
+            val dateListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, monthOfYear)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                TimePickerDialog(
+                    context!!, timeListener,
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE), true
+                )
+                    .show()
+
+            }
+
+            DatePickerDialog(
+                context, dateListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+
+        }
+
+    }
+
+    private fun updateDateView() {
+
+        activity_create_message_message_time.text = DateFormat.format("d MMMM", Date(calendar.timeInMillis))
+
+    }
+
     fun createMessage() {
 
         if (activity_create_message_message_edit_text.text.toString().isNotEmpty()) {
 
-        sentModelMessagesToDB(
-            MessagesDatabaseModel(
-                System.currentTimeMillis()+3000,
-                MessageMainModel(activity_create_message_message_edit_text.text.toString()),
-                false
+            sentModelMessagesToDB(
+                MessagesDatabaseModel(
+                    System.currentTimeMillis() + 3000,
+                    MessageMainModel(activity_create_message_message_edit_text.text.toString()),
+                    false
+                )
             )
-        )
 
         }
 
@@ -117,10 +158,10 @@ class CreateMessageFragment : Fragment() {
 
     }
 
-    fun hideSoftKeyboard() {
+    private fun hideSoftKeyboard() {
 
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(getView()?.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(getView()?.getWindowToken(), 0)
 
     }
 

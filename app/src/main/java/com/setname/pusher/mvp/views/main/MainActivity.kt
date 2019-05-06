@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
     override fun setWorkers(list: List<Long>) {
 
-        var listOfOneTimeWorkRequest = mutableListOf<OneTimeWorkRequest>()
+        val listOfOneTimeWorkRequest = mutableListOf<OneTimeWorkRequest>()
 
         val internetConnection = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
             when (it?.state) {
 
+                State.FAILED -> {
+
+                    Log.i("MainActivityTag", "failed: time = ${time}")
+
+                }
+
                 State.SUCCEEDED -> {
 
                     mvpTabletController.changeStatus(time)
@@ -82,7 +88,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
                 State.CANCELLED -> {
 
-                    Log.i("MainActLog", "checkIntCon")
+
 
                 }
 

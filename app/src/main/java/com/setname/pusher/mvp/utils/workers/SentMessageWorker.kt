@@ -10,29 +10,33 @@ import android.app.NotificationManager
 import android.content.Context
 import com.setname.pusher.R
 import kotlin.random.Random
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.Color
 
 
 class SentMessageWorker : Worker() {
 
     override fun doWork(): WorkerResult {
 
-        if (isStopped){
+        /*if (isStopped){
 
             return WorkerResult.FAILURE
 
-        } else {
+        } else {*/
 
             val notificationManager =
-                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
             val notification = NotificationCompat.Builder(applicationContext, "default")
+                .setSmallIcon(R.mipmap.ic_pusher)//not working
                 .setContentTitle("Pusher")
                 .setContentText("Message has been sent!")
                 .setAutoCancel(true)
 
-            notificationManager.notify(Random.nextInt(), notification.build())
+            notificationManager.notify(1, notification.build())
 
-        }
+        /*}*/
 
         return WorkerResult.SUCCESS
     }
