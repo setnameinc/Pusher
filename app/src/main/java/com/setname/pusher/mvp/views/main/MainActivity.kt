@@ -1,6 +1,5 @@
 package com.setname.pusher.mvp.views.main
 
-import android.app.job.JobInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat

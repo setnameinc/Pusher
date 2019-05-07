@@ -58,9 +58,9 @@ class CreateMessageFragment : Fragment() {
 
         updateDateView()
 
-/*
+
+
         setCalendarImageClickListener()
-*/
 
     }
 
@@ -103,25 +103,21 @@ class CreateMessageFragment : Fragment() {
                     context!!, timeListener,
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE), true
-                )
-                    .show()
+                ).show()
 
             }
 
-            DatePickerDialog(
+            val dateDialog = DatePickerDialog(
                 context, dateListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            )
+
+            dateDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            dateDialog.show()
 
         }
-
-    }
-
-    private fun updateDateView() {
-
-        activity_create_message_message_time.text = DateFormat.format("d MMMM", Date(calendar.timeInMillis))
 
     }
 
@@ -131,13 +127,19 @@ class CreateMessageFragment : Fragment() {
 
             sentModelMessagesToDB(
                 MessagesDatabaseModel(
-                    System.currentTimeMillis() + 3000,
+                    calendar.timeInMillis,
                     MessageMainModel(activity_create_message_message_edit_text.text.toString()),
                     false
                 )
             )
 
         }
+
+    }
+
+    private fun updateDateView() {
+
+        activity_create_message_message_time.text = DateFormat.format("d MMMM", Date(calendar.timeInMillis))
 
     }
 
@@ -152,6 +154,12 @@ class CreateMessageFragment : Fragment() {
         tabletPresenter.sentDataToDB(model)
 
         hideSoftKeyboard()
+
+        finishFragment()
+
+    }
+
+    private fun finishFragment(){
 
         fragmentManager?.beginTransaction()?.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
             ?.remove(this)?.commit()

@@ -2,14 +2,15 @@ package com.setname.pusher.mvp.adapters
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.setname.pusher.R
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import kotlinx.android.synthetic.main.adapter_model_messages.view.*
 import java.util.*
-import android.text.format.DateFormat
 
 
 class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
@@ -44,15 +45,48 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
 
         fun setDate(time: Long) {
 
-            localeView.adapter_model_messages_date.text = "${DateFormat.format("d MMMM", Date(time))}"
+            var strFormat = "HH:mm"
+
+            val calendarToday = Calendar.getInstance()
+            calendarToday.time = Date()
+
+            val calendarSometime = Calendar.getInstance()
+            calendarSometime.time = Date(time)
+
+            if (calendarSometime.get(Calendar.YEAR) == calendarToday.get(Calendar.YEAR)
+                && calendarSometime.get(Calendar.DAY_OF_YEAR) == calendarToday.get(Calendar.DAY_OF_YEAR)
+            ) {
+
+                localeView.adapter_model_messages_date.text = "${DateFormat.format(strFormat, Date(time))}"
+
+            } else {
+
+                localeView.adapter_model_messages_date.text = "${DateFormat.format("d MMMM", Date(time))}"
+
+            }
+
+            setLongClickListenerDate(time)
 
         }
 
-        fun setImage(isDelivered:Boolean){
+        private fun setLongClickListenerDate(time: Long) {
 
-            var imageId:Int = 0
+            localeView.adapter_model_messages_date.setOnLongClickListener {
 
-            if (isDelivered){
+                Toast.makeText(localeView.context, "${DateFormat.format("d MMMM HH:mm", Date(time))}", Toast.LENGTH_SHORT)
+                    .show()
+
+                return@setOnLongClickListener false
+
+            }
+
+        }
+
+        fun setImage(isDelivered: Boolean) {
+
+            var imageId: Int = 0
+
+            if (isDelivered) {
 
                 imageId = R.mipmap.ic_delivered
 

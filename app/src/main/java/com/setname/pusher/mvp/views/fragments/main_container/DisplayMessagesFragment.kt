@@ -2,18 +2,14 @@ package com.setname.pusher.mvp.views.fragments.main_container
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.setname.pusher.R
 import com.setname.pusher.mvp.adapters.MessagesAdapter
 import com.setname.pusher.mvp.presenter.main.TabletPresenter
-import com.setname.pusher.mvp.room.models.MessageMainModel
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
-import com.setname.pusher.mvp.utils.context.AppContext
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 import java.util.*
 
@@ -46,6 +42,20 @@ class DisplayMessagesFragment : Fragment() {
 
         }
 
+        setSwipeRefreshListener()
+
+    }
+
+    private fun setSwipeRefreshListener() {
+
+        fragment_messages_list_swipe_refresh.setOnRefreshListener {
+
+            tabletPresenter.updateDisplayMessage()
+
+            fragment_messages_list_swipe_refresh.isRefreshing = false
+
+        }
+
     }
 
     fun setDataForRecyclerView(messagesList: List<MessagesDatabaseModel>) {
@@ -62,7 +72,7 @@ class DisplayMessagesFragment : Fragment() {
 
     }
 
-    fun updateDisplayMessage(){
+    fun updateDisplayMessage() {
 
         tabletPresenter.updateDisplayMessage()
 
