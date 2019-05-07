@@ -5,3 +5,4 @@ Mixed custom MVP, Retrofit2
 
 Independence from the Internet connection and sending messages in the background
 
+Enter messages by field or QR reader
