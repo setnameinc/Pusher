@@ -1,4 +1,4 @@
-package com.setname.pusher.mvp.views.fragments.main_container
+package com.setname.pusher.mvp.views.fragments.create
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

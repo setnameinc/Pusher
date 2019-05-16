@@ -2,7 +2,7 @@ package com.setname.pusher.mvp.controllers.fragments.display
 
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
-import com.setname.pusher.mvp.views.fragments.main_container.DisplayMessagesFragment
+import com.setname.pusher.mvp.views.fragments.display.DisplayMessagesFragment
 
 class DisplayMessagesController {
 

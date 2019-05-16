@@ -1,7 +1,7 @@
 package com.setname.pusher.mvp.controllers.fragments.create
 
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
-import com.setname.pusher.mvp.views.fragments.main_container.CreateMessageFragment
+import com.setname.pusher.mvp.views.fragments.create.CreateMessageFragment
 
 class CreateMessageController{
 

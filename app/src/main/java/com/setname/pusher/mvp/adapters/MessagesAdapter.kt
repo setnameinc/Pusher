@@ -15,7 +15,6 @@ import com.setname.pusher.mvp.utils.context.AppContext
 import kotlinx.android.synthetic.main.adapter_model_messages.view.*
 import java.util.*
 
-
 class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
     RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 

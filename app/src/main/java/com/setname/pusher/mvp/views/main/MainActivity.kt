@@ -10,7 +10,7 @@ import com.setname.pusher.mvp.presenters.main.MVPTabletPresenter
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.workers.SentMessageWorker
-import com.setname.pusher.mvp.views.fragments.main_container.CreateMessageFragment
+import com.setname.pusher.mvp.views.fragments.create.CreateMessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit

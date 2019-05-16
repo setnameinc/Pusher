@@ -1,4 +1,4 @@
-package com.setname.pusher.mvp.views.fragments.main_container
+package com.setname.pusher.mvp.views.fragments.display
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,6 +12,9 @@ import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 import java.util.*
+import android.support.v7.widget.helper.ItemTouchHelper
+import com.setname.pusher.mvp.utils.swipe_controller.SwipeController
+import com.setname.pusher.mvp.utils.swipe_controller.SwipeControllerActions
 
 class DisplayMessagesFragment : Fragment() {
 
@@ -43,6 +46,37 @@ class DisplayMessagesFragment : Fragment() {
         }
 
         setSwipeRefreshListener()
+
+        attachSwipeListener()
+
+    }
+
+    private fun attachSwipeListener(){
+
+        //demo
+
+        val callback = SwipeController(object : SwipeControllerActions {
+
+            override fun forcePush(pos: Int) {
+
+                messageAdapter.notifyItemRemoved(pos)
+                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.getItemCount())
+
+                //TODO(force push fun)
+
+            }
+
+            override fun delete(pos: Int) {
+
+                messageAdapter.notifyItemRemoved(pos)
+                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.getItemCount())
+
+                //TODO(delete fun)
+
+            }
+        })
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(fragment_messages_list_recycler_view)
 
     }
 
