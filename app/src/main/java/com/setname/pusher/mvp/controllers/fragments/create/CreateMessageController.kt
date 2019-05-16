@@ -1,9 +1,9 @@
-package com.setname.pusher.mvp.presenter.fragment.create
+package com.setname.pusher.mvp.controllers.fragments.create
 
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.views.fragments.main_container.CreateMessageFragment
 
-class CreateMessagePresenter{
+class CreateMessageController{
 
     fun setFragment(tabletPresenter: TabletPresenter){
 

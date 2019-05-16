@@ -1,6 +1,6 @@
-package com.setname.pusher.mvp.presenter.workers
+package com.setname.pusher.mvp.presenters.worker
 
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 class SentMessageWorkerPresenter {
 

@@ -1,14 +1,17 @@
 package com.setname.pusher.mvp.adapters
 
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.setname.pusher.R
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
+import com.setname.pusher.mvp.utils.context.AppContext
 import kotlinx.android.synthetic.main.adapter_model_messages.view.*
 import java.util.*
 
@@ -33,9 +36,24 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
         holder.setText(list[pos].main.message)
         holder.setDate(list[pos].time)
         holder.setImage(list[pos].posted)
+
     }
 
-    inner class ViewHolder(val localeView: View) : RecyclerView.ViewHolder(localeView) {
+    inner class ViewHolder(val localeView: View) : RecyclerView.ViewHolder(localeView), View.OnClickListener {
+
+        init {
+
+            localeView.setOnClickListener(this)
+
+        }
+
+        override fun onClick(v: View?) {
+
+            Log.i("MessageAdapter", "clicked")
+
+            val funArray = arrayOf("Force push", "Show full data")
+
+        }
 
         fun setText(str: String) {
 
@@ -73,7 +91,11 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
 
             localeView.adapter_model_messages_date.setOnLongClickListener {
 
-                Toast.makeText(localeView.context, "${DateFormat.format("d MMMM HH:mm", Date(time))}", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    localeView.context,
+                    "${DateFormat.format("d MMMM HH:mm", Date(time))}",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
 
                 return@setOnLongClickListener false

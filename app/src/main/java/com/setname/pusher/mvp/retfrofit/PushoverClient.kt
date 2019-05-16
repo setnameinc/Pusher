@@ -8,7 +8,7 @@ import retrofit2.Response
 class PushoverClient {
 
     private val DEVELOPER_KEY = "aoek1vexqfquerdnxgfr22oqv816cz"
-    private val CLIENT_KEY = "u3ba37zs37ftt72cab43qwp2xofidn"
+    private val CLIENT_KEY = "ututjpe39tswiptnxbkhozj3yuu588"
 
     private val apiService by lazy {
 
@@ -16,7 +16,7 @@ class PushoverClient {
 
     }
 
-    fun postMessageUsingRetrofit(msg: String): Deferred<Response<PostModel>> =
+     fun postMessageUsingRetrofit(msg:String): Deferred<Response<PostModel>> =
 
         apiService.postMessageAsync(PostModel(DEVELOPER_KEY, CLIENT_KEY, msg))
 

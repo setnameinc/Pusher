@@ -1,9 +1,8 @@
-package com.setname.pusher.mvp.controller
+package com.setname.pusher.mvp.presenters.main
 
 import android.support.v4.app.Fragment
 import android.util.Log
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
@@ -17,11 +16,11 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.logging.Logger
 
-class MVPTabletController(private val interactionsMainActivity: InteractionsMainActivity) {
+class MVPTabletPresenter(private val interactionsMainActivity: InteractionsMainActivity) {
 
     private val logger by lazy {
 
-        Logger.getLogger("MVPTabletController")
+        Logger.getLogger("MVPTabletPresenter")
 
     }
 

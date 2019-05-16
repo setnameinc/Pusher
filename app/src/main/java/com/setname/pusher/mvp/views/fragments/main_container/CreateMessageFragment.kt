@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.setname.pusher.R
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessageMainModel
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext

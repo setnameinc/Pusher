@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.setname.pusher.R
 import com.setname.pusher.mvp.adapters.MessagesAdapter
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 import java.util.*

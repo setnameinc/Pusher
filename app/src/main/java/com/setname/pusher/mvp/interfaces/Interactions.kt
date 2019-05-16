@@ -1,8 +1,7 @@
 package com.setname.pusher.mvp.interfaces
 
 import android.support.v4.app.Fragment
-import androidx.work.Worker
-import com.setname.pusher.mvp.presenter.main.TabletPresenter
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 
 interface InteractionsMainActivity{

@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.setname.pusher.R
-import com.setname.pusher.mvp.controller.MVPTabletController
+import com.setname.pusher.mvp.presenters.main.MVPTabletPresenter
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.workers.SentMessageWorker
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
     }
 
-    private val mvpTabletController = MVPTabletController(this)
+    private val mvpTabletController = MVPTabletPresenter(this)
 
     private val workManager = WorkManager.getInstance()
 
