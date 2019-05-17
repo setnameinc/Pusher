@@ -68,15 +68,7 @@ class DisplayMessagesFragment : Fragment() {
 
             override fun delete(pos: Int) {
 
-                val model = list[pos]
-
-                //если удалять элементы с одной позиции списка, непонятно откуда появляются старые эелменты
-
-                messageAdapter.deleteByPosition(pos)
-
-                showUndoAlertDialog(pos, model)
-
-                Log.i("DisplayMessagesFrag", "deleted = ${model.time}")
+                deleteItemWithTimer(pos)
 
                 //TODO(delete fun)
 
@@ -85,6 +77,20 @@ class DisplayMessagesFragment : Fragment() {
 
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(fragment_messages_list_recycler_view)
+
+    }
+
+    private fun deleteItemWithTimer(position: Int){
+
+        val model = list[position]
+
+        list.removeAt(position)
+        messageAdapter.notifyItemRemoved(position)
+        messageAdapter.notifyItemRangeChanged(position, messageAdapter.itemCount)
+
+        //TODO(make timer for undo)
+
+        showUndoAlertDialog(position, model)
 
     }
 
@@ -126,10 +132,9 @@ class DisplayMessagesFragment : Fragment() {
             .make(this.fragmentMessagesListView, "Item was removed from the list.", Snackbar.LENGTH_LONG)
         snackbar.setAction("UNDO") {
 
-            messageAdapter.addToAdapterList(position, model)
+            list.add(position, model)
+            messageAdapter.notifyItemInserted(position)
             fragment_messages_list_recycler_view.scrollToPosition(position)
-
-            Log.i("DisplayMessagesFrag", "restored = ${model.time}")
 
         }
 
