@@ -1,8 +1,12 @@
 package com.setname.pusher.mvp.views.fragments.display
 
+import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +14,10 @@ import com.setname.pusher.R
 import com.setname.pusher.mvp.adapters.MessagesAdapter
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
-import kotlinx.android.synthetic.main.fragment_messages_list.*
-import java.util.*
-import android.support.v7.widget.helper.ItemTouchHelper
 import com.setname.pusher.mvp.utils.swipe_controller.SwipeController
 import com.setname.pusher.mvp.utils.swipe_controller.SwipeControllerActions
+import kotlinx.android.synthetic.main.fragment_messages_list.*
+import java.util.*
 
 class DisplayMessagesFragment : Fragment() {
 
@@ -46,14 +49,11 @@ class DisplayMessagesFragment : Fragment() {
         }
 
         setSwipeRefreshListener()
-
         attachSwipeListener()
 
     }
 
-    private fun attachSwipeListener(){
-
-        //demo
+    private fun attachSwipeListener() {
 
         val callback = SwipeController(object : SwipeControllerActions {
 
@@ -68,15 +68,22 @@ class DisplayMessagesFragment : Fragment() {
 
             override fun delete(pos: Int) {
 
-                messageAdapter.notifyItemRemoved(pos)
-                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.itemCount)
+                val model = list[pos]
+
+                //если удалять элементы с одной позиции списка, непонятно откуда появляются старые эелменты
+
+                messageAdapter.deleteByPosition(pos)
+
+                showUndoAlertDialog(pos, model)
+
+                Log.i("DisplayMessagesFrag", "deleted = ${model.time}")
 
                 //TODO(delete fun)
 
             }
         })
 
-            val touchHelper = ItemTouchHelper(callback)
+        val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(fragment_messages_list_recycler_view)
 
     }
@@ -110,6 +117,30 @@ class DisplayMessagesFragment : Fragment() {
     fun updateDisplayMessage() {
 
         tabletPresenter.updateDisplayMessage()
+
+    }
+
+    fun showUndoAlertDialog(position: Int, model:MessagesDatabaseModel) {
+
+        val snackbar = Snackbar
+            .make(this.fragmentMessagesListView, "Item was removed from the list.", Snackbar.LENGTH_LONG)
+        snackbar.setAction("UNDO") {
+
+            messageAdapter.addToAdapterList(position, model)
+            fragment_messages_list_recycler_view.scrollToPosition(position)
+
+            Log.i("DisplayMessagesFrag", "restored = ${model.time}")
+
+        }
+
+        snackbar.setActionTextColor(Color.YELLOW)
+        snackbar.show()
+
+    }
+
+    fun deleteMessage() {
+
+        //tabletPresenter.delete...
 
     }
 

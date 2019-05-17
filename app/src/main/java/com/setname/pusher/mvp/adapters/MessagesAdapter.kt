@@ -15,7 +15,7 @@ import com.setname.pusher.mvp.utils.context.AppContext
 import kotlinx.android.synthetic.main.adapter_model_messages.view.*
 import java.util.*
 
-class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
+class MessagesAdapter(private val list: MutableList<MessagesDatabaseModel>) :
     RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -124,6 +124,21 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
             }
 
         }
+
+    }
+
+    fun deleteByPosition(pos: Int){
+
+        list.removeAt(pos)
+        notifyItemRemoved(pos)
+        notifyItemRangeChanged(pos, itemCount)
+
+    }
+
+    fun addToAdapterList(pos: Int, model: MessagesDatabaseModel){
+
+        list.add(pos, model)
+        notifyItemInserted(pos)
 
     }
 

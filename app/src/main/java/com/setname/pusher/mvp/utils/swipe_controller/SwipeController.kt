@@ -13,7 +13,7 @@ import android.util.Log
 class SwipeController(private val controller: SwipeControllerActions) :
     Callback() {
 
-    private enum class SwipeState() {
+    private enum class SwipeState {
         LEFT_VISIBLE,
         ALL_GONE,
         RIGHT_VISIBLE
@@ -118,11 +118,7 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
     }
 
-    override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-
-        return true
-
-    }
+    override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean = false
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, notListPos: Int) {
 
