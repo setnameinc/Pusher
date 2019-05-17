@@ -7,11 +7,10 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE
-import android.support.v7.widget.helper.ItemTouchHelper.Callback
-import android.util.Log
+import android.view.View
+import com.setname.pusher.mvp.adapters.TypesOfMessages
 
-class SwipeController(private val controller: SwipeControllerActions) :
-    Callback() {
+class SwipeController(private val controller: SwipeControllerActions) : ItemTouchHelper.Callback() {
 
     private enum class SwipeState {
         LEFT_VISIBLE,
@@ -20,9 +19,8 @@ class SwipeController(private val controller: SwipeControllerActions) :
     }
 
     private val rightSidePaint = Paint().apply { this.color = Color.RED }
-    private val leftSidePaint = Paint().apply { this.color = Color.parseColor("#43A047") }
+    private val leftSidePaint = Paint().apply { this.color = Color.parseColor("#43A047") /*red for delete*/ }
 
-    private val imageWidth = 100
     private val textSize = 40f
 
     private var currentState = SwipeState.ALL_GONE
@@ -41,66 +39,30 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
             val item = viewHolder.itemView
 
-            if (dX > 0) {
+            when {
+                dX > 0 -> {
 
-                if (currentState != SwipeState.LEFT_VISIBLE) {
-                    currentState = SwipeState.LEFT_VISIBLE
+                    if (currentState != SwipeState.LEFT_VISIBLE) {
+                        currentState = SwipeState.LEFT_VISIBLE
+                    }
+                    drawForcePushView(item, dX, c)
+
+                }
+                dX < 0 -> {
+
+                    if (currentState != SwipeState.RIGHT_VISIBLE) {
+                        currentState = SwipeState.RIGHT_VISIBLE
+                    }
+
+                    drawDeleteView(item, dX, c)
+
                 }
 
-                //left to right
-                val rect = Rect(
-                    item.left,
-                    item.top,
-                    item.left + dX.toInt(),
-                    item.bottom
-                )
+                else -> {
 
-                c.drawRect(
-                    rect,
-                    leftSidePaint
-                )
+                    currentState = SwipeState.ALL_GONE
 
-                c.drawText(
-                    "FORCE PUSH",
-                    rect.centerX().toFloat(),
-                    rect.centerY().toFloat() + textSize / 4,
-                    Paint().apply {
-                        color = Color.WHITE
-                        textAlign = Paint.Align.RIGHT
-                        textSize = this@SwipeController.textSize
-                    })
-
-            } else if (dX<0){
-
-                if (currentState != SwipeState.RIGHT_VISIBLE) {
-                    currentState = SwipeState.RIGHT_VISIBLE
                 }
-
-                //right to left
-                val rect = Rect(
-                    item.right + dX.toInt(),
-                    item.top,
-                    item.right,
-                    item.bottom
-                )
-
-                c.drawRect(
-                    rect,
-                    rightSidePaint
-                )
-
-                c.drawText("DELETE",
-                    rect.centerX().toFloat(),
-                    rect.centerY().toFloat() + textSize / 4,
-                    Paint().apply {
-                        color = Color.WHITE
-                        textAlign = Paint.Align.LEFT
-                        textSize = this@SwipeController.textSize
-                    })
-
-            } else {
-
-                currentState = SwipeState.ALL_GONE
 
             }
 
@@ -110,11 +72,67 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
     }
 
-    override fun getMovementFlags(p0: RecyclerView, p1: RecyclerView.ViewHolder): Int {
+    private fun drawForcePushView(item:View, dX: Float, c: Canvas){
 
-        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+        val rect = Rect(
+            item.left,
+            item.top,
+            item.left + dX.toInt(),
+            item.bottom
+        )
 
-        return makeMovementFlags(0, swipeFlags)
+        c.drawRect(
+            rect,
+            leftSidePaint
+        )
+
+        c.drawText("FORCE PUSH", rect, Paint.Align.RIGHT)
+
+    }
+
+    private fun drawDeleteView(item:View, dX: Float, c: Canvas){
+
+        val rect = Rect(
+            item.right + dX.toInt(),
+            item.top,
+            item.right,
+            item.bottom
+        )
+
+        c.drawRect(
+            rect,
+            rightSidePaint
+        )
+
+        c.drawText("DELETE", rect, Paint.Align.LEFT)
+
+    }
+
+    private fun Canvas.drawText(message:String, rect: Rect, alignType:Paint.Align){
+
+        this.drawText(
+            message,
+            rect.centerX().toFloat(),
+            rect.centerY().toFloat() + textSize / 4, //alignment
+            Paint().apply {
+                color = Color.WHITE
+                textAlign = alignType
+                textSize = this@SwipeController.textSize
+            })
+
+    }
+
+    override fun getMovementFlags(p0: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+
+        if (viewHolder.itemViewType == TypesOfMessages.NOT_PUSHED.typeNumber) {
+
+            return makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
+
+        } else {
+
+            return makeMovementFlags(0, ItemTouchHelper.START)
+
+        }
 
     }
 
@@ -122,9 +140,7 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, notListPos: Int) {
 
-        Log.i("SwipeController", "swiped")
-
-        when (currentState){
+        when (currentState) {
 
             SwipeState.LEFT_VISIBLE -> {
 

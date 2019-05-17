@@ -1,10 +1,10 @@
-package com.setname.pusher.mvp.controllers.fragments.display
+package com.setname.pusher.mvp.presenters.display
 
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.views.fragments.display.DisplayMessagesFragment
 
-class DisplayMessagesController {
+class DisplayMessagesPresenter {
 
     fun setFragment(tabletPresenter: TabletPresenter){
 

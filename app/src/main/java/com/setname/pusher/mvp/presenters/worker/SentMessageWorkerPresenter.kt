@@ -22,7 +22,6 @@ class SentMessageWorkerPresenter {
 
     /*fun addSentMessageReceiver(time: Long) {
 
-
         messageReceiver.setTimeForSentMessage(time)
 
     }*/

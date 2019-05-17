@@ -13,8 +13,3 @@ interface InteractionsMainActivity{
     fun setWork(model: MessagesDatabaseModel)
 
 }
-interface InteractionsTabletPresenter{
-
-    fun setTabletPresenter(tabletPresenter: TabletPresenter)
-
-}

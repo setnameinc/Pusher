@@ -28,6 +28,8 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
         )
     }
 
+    override fun getItemViewType(position: Int): Int = if (list[position].posted) TypesOfMessages.PUSHED.typeNumber else TypesOfMessages.NOT_PUSHED.typeNumber
+
     override fun getItemCount(): Int = list.size
 
     override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
@@ -127,4 +129,8 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
 
     }
 
+}
+
+enum class TypesOfMessages(val typeNumber:Int){
+    PUSHED(1), NOT_PUSHED(2)
 }

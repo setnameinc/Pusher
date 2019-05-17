@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,15 +61,13 @@ class DisplayMessagesFragment : Fragment() {
                 messageAdapter.notifyItemRemoved(pos)
                 messageAdapter.notifyItemRangeChanged(pos, messageAdapter.itemCount)
 
-                //TODO(force push fun)
+                forcePushMessage(list[pos])
 
             }
 
             override fun delete(pos: Int) {
 
                 deleteItemWithTimer(pos)
-
-                //TODO(delete fun)
 
             }
         })
@@ -80,7 +77,7 @@ class DisplayMessagesFragment : Fragment() {
 
     }
 
-    private fun deleteItemWithTimer(position: Int){
+    private fun deleteItemWithTimer(position: Int) {
 
         val model = list[position]
 
@@ -88,9 +85,11 @@ class DisplayMessagesFragment : Fragment() {
         messageAdapter.notifyItemRemoved(position)
         messageAdapter.notifyItemRangeChanged(position, messageAdapter.itemCount)
 
-        //TODO(make timer for undo)
-
         showUndoAlertDialog(position, model)
+
+        //TODO(add timer, after timer finishing, must delete message from DB, hide snackbar)
+
+        deleteMessage()
 
     }
 
@@ -126,26 +125,31 @@ class DisplayMessagesFragment : Fragment() {
 
     }
 
-    fun showUndoAlertDialog(position: Int, model:MessagesDatabaseModel) {
+    private fun showUndoAlertDialog(position: Int, model: MessagesDatabaseModel) {
 
-        val snackbar = Snackbar
-            .make(this.fragmentMessagesListView, "Item was removed from the list.", Snackbar.LENGTH_LONG)
-        snackbar.setAction("UNDO") {
+        //TODO(set custom snackbar with timer)
 
-            list.add(position, model)
-            messageAdapter.notifyItemInserted(position)
-            fragment_messages_list_recycler_view.scrollToPosition(position)
+        Snackbar.make(this.fragmentMessagesListView, "Item was removed from the list.", Snackbar.LENGTH_LONG)
+            .setAction("UNDO") {
 
-        }
+                list.add(position, model)
+                messageAdapter.notifyItemInserted(position)
+                fragment_messages_list_recycler_view.scrollToPosition(position)
 
-        snackbar.setActionTextColor(Color.YELLOW)
-        snackbar.show()
+            }.apply { setActionTextColor(Color.YELLOW) }.show()
+
 
     }
 
-    fun deleteMessage() {
+    private fun deleteMessage() {
 
-        //tabletPresenter.delete...
+        //TODO(delete fun in tabletPresenter)
+
+    }
+
+    private fun forcePushMessage(model: MessagesDatabaseModel){
+
+        tabletPresenter.sentDataToDB(model)
 
     }
 

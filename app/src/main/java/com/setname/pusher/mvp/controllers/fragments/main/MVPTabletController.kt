@@ -1,8 +1,9 @@
-package com.setname.pusher.mvp.presenters.main
+package com.setname.pusher.mvp.controllers.fragments.main
 
 import android.support.v4.app.Fragment
 import android.util.Log
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
+import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
@@ -16,11 +17,11 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.logging.Logger
 
-class MVPTabletPresenter(private val interactionsMainActivity: InteractionsMainActivity) {
+class MVPTabletController(private val interactionsMainActivity: InteractionsMainActivity) {
 
     private val logger by lazy {
 
-        Logger.getLogger("MVPTabletPresenter")
+        Logger.getLogger("MVPTabletController")
 
     }
 
@@ -97,7 +98,7 @@ class MVPTabletPresenter(private val interactionsMainActivity: InteractionsMainA
 
     fun changeStatus(time: Long) {
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Main).launch {
 
             val request =
                 pusherAPIService.postMessageUsingRetrofit(interactionsWithDB.getById(time).main.message)
