@@ -28,10 +28,10 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
         )
     }
 
-
     override fun getItemCount(): Int = list.size
 
     override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
+
         holder.setText(list[pos].main.message)
         holder.setDate(list[pos].time)
         holder.setImage(list[pos].posted)
@@ -62,7 +62,7 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
 
         fun setDate(time: Long) {
 
-            var strFormat = "HH:mm"
+            val strFormat = "HH:mm"
 
             val calendarToday = Calendar.getInstance()
             calendarToday.time = Date()

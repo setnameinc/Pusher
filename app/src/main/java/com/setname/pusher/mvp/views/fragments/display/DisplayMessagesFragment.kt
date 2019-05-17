@@ -60,7 +60,7 @@ class DisplayMessagesFragment : Fragment() {
             override fun forcePush(pos: Int) {
 
                 messageAdapter.notifyItemRemoved(pos)
-                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.getItemCount())
+                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.itemCount)
 
                 //TODO(force push fun)
 
@@ -69,13 +69,14 @@ class DisplayMessagesFragment : Fragment() {
             override fun delete(pos: Int) {
 
                 messageAdapter.notifyItemRemoved(pos)
-                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.getItemCount())
+                messageAdapter.notifyItemRangeChanged(pos, messageAdapter.itemCount)
 
                 //TODO(delete fun)
 
             }
         })
-        val touchHelper = ItemTouchHelper(callback)
+
+            val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(fragment_messages_list_recycler_view)
 
     }

@@ -13,8 +13,19 @@ import android.util.Log
 class SwipeController(private val controller: SwipeControllerActions) :
     Callback() {
 
-    private val rightSidePaint = Paint().apply { this.color = Color.BLACK }
-    private val leftSidePaint = Paint().apply { this.color = Color.BLUE }
+    private enum class SwipeState() {
+        LEFT_VISIBLE,
+        ALL_GONE,
+        RIGHT_VISIBLE
+    }
+
+    private val rightSidePaint = Paint().apply { this.color = Color.RED }
+    private val leftSidePaint = Paint().apply { this.color = Color.parseColor("#43A047") }
+
+    private val imageWidth = 100
+    private val textSize = 40f
+
+    private var currentState = SwipeState.ALL_GONE
 
     override fun onChildDraw(
         c: Canvas,
@@ -30,12 +41,13 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
             val item = viewHolder.itemView
 
-            /*Log.i("SwipeController", "dX = $dX")*/
-
             if (dX > 0) {
 
-                //left to right
+                if (currentState != SwipeState.LEFT_VISIBLE) {
+                    currentState = SwipeState.LEFT_VISIBLE
+                }
 
+                //left to right
                 val rect = Rect(
                     item.left,
                     item.top,
@@ -48,15 +60,23 @@ class SwipeController(private val controller: SwipeControllerActions) :
                     leftSidePaint
                 )
 
-                c.drawText("FORCE PUSH", rect.centerX().toFloat(), rect.centerY().toFloat(), Paint().apply {
-                    color = Color.RED
-                    textSize = 60f
-                })
+                c.drawText(
+                    "FORCE PUSH",
+                    rect.centerX().toFloat(),
+                    rect.centerY().toFloat() + textSize / 4,
+                    Paint().apply {
+                        color = Color.WHITE
+                        textAlign = Paint.Align.RIGHT
+                        textSize = this@SwipeController.textSize
+                    })
 
-            } else {
+            } else if (dX<0){
+
+                if (currentState != SwipeState.RIGHT_VISIBLE) {
+                    currentState = SwipeState.RIGHT_VISIBLE
+                }
 
                 //right to left
-
                 val rect = Rect(
                     item.right + dX.toInt(),
                     item.top,
@@ -69,18 +89,22 @@ class SwipeController(private val controller: SwipeControllerActions) :
                     rightSidePaint
                 )
 
-                c.drawText("DELETE", rect.centerX().toFloat(), rect.centerY().toFloat(), Paint().apply {
-                    color = Color.RED
-                    textSize = 60f
-                })
+                c.drawText("DELETE",
+                    rect.centerX().toFloat(),
+                    rect.centerY().toFloat() + textSize / 4,
+                    Paint().apply {
+                        color = Color.WHITE
+                        textAlign = Paint.Align.LEFT
+                        textSize = this@SwipeController.textSize
+                    })
+
+            } else {
+
+                currentState = SwipeState.ALL_GONE
 
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-
-/*
-            Log.i("SwipeController", "swiping")
-*/
 
         }
 
@@ -104,7 +128,21 @@ class SwipeController(private val controller: SwipeControllerActions) :
 
         Log.i("SwipeController", "swiped")
 
-        controller.delete(p0.adapterPosition)
+        when (currentState){
+
+            SwipeState.LEFT_VISIBLE -> {
+
+                controller.forcePush(p0.adapterPosition)
+
+            }
+
+            SwipeState.RIGHT_VISIBLE -> {
+
+                controller.delete(p0.adapterPosition)
+
+            }
+
+        }
 
     }
 
