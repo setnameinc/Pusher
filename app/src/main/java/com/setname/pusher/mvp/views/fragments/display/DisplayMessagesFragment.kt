@@ -13,8 +13,8 @@ import com.setname.pusher.R
 import com.setname.pusher.mvp.adapters.MessagesAdapter
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
-import com.setname.pusher.mvp.utils.swipe_controller.SwipeController
-import com.setname.pusher.mvp.utils.swipe_controller.SwipeControllerActions
+import com.setname.pusher.mvp.utils.swipecontroller.SwipeController
+import com.setname.pusher.mvp.utils.swipecontroller.SwipeControllerActions
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 import java.util.*
 
@@ -137,7 +137,6 @@ class DisplayMessagesFragment : Fragment() {
                 fragment_messages_list_recycler_view.scrollToPosition(position)
 
             }.apply { setActionTextColor(Color.YELLOW) }.show()
-
 
     }
 

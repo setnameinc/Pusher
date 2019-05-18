@@ -1,4 +1,4 @@
-package com.setname.pusher.mvp.utils.swipe_controller
+package com.setname.pusher.mvp.utils.swipecontroller
 
 import android.graphics.Canvas
 import android.graphics.Color

@@ -40,7 +40,7 @@ class MessagesAdapter(private val list: List<MessagesDatabaseModel>) :
 
     }
 
-    inner class ViewHolder(val localeView: View) : RecyclerView.ViewHolder(localeView), View.OnClickListener {
+    inner class ViewHolder(private val localeView: View) : RecyclerView.ViewHolder(localeView), View.OnClickListener {
 
         init {
 

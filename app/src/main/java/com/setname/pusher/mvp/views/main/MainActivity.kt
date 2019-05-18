@@ -1,10 +1,11 @@
 package com.setname.pusher.mvp.views.main
 
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.ViewGroup
 import com.setname.pusher.R
 import com.setname.pusher.mvp.controllers.fragments.main.MVPTabletController
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import androidx.work.*
+import com.setname.pusher.mvp.utils.roundtimer.RoundTimer
 
 class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
@@ -91,6 +93,11 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
                 }
 
+                else -> {
+
+
+
+                }
             }
 
         })
@@ -133,8 +140,9 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         activity_main_button_right_bottom.apply {
 
             isClickable = false
+            setImageResource(R.mipmap.ic_add)
             setOnClickListener { mvpTabletController.addCreateMessageView() }
-            background = ContextCompat.getDrawable(context, R.mipmap.ic_add)
+            /*background = ContextCompat.getDrawable(context, R.mipmap.ic_add)*/
             isClickable = true
 
         }
@@ -146,7 +154,8 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
             isClickable = false
             setOnClickListener { mvpTabletController.createMessage() }
-            background = ContextCompat.getDrawable(context, R.mipmap.ic_confirm)
+            setImageResource(R.mipmap.ic_confirm)
+            /*background = ContextCompat.getDrawable(context, R.mipmap.ic_confirm)*/
             isClickable = true
 
         }
@@ -161,15 +170,18 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mvpTabletController.setMessagesList()
+        val coordinatorLayout = findViewById<CoordinatorLayout>(R.id.activity_main_parent_layout)
+
+        val drawViewLayoutParams =
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+        coordinatorLayout.addView(RoundTimer(applicationContext).apply { layoutParams = drawViewLayoutParams })
+
+        /*mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
 
-        mvpTabletController.startSentMessageWorker()
-
-/*
-        ALARM_CODE = resources.getInteger(R.integer.ALARM_CODE)
-*/
+        mvpTabletController.startSentMessageWorker()*/
 
     }
 
