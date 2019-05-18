@@ -4,19 +4,36 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.shapes.OvalShape
 import android.support.design.widget.CoordinatorLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
+import java.util.logging.Logger
 
 
 class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
 
-    private val sizeOfRound = 140
+    private val logger by lazy {
+        Logger.getLogger("RoundTimer")
+    }
 
-    private val PROPERTY_LENGHT = sizeOfRound * Math.PI.toFloat()
+    private var sizeOfRound = -1
+    private var PROPERTY_LENGHT = -1f
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+
+        sizeOfRound = height //TODO(calculating and define square size)
+        PROPERTY_LENGHT = sizeOfRound * Math.PI.toFloat()
+
+        logger.info("sizeOfRound = $sizeOfRound")
+
+    }
+
+    private val circleModel = RectF(0f, 0f, width.toFloat(), height.toFloat())
 
     inner class DrawCircle(localContext: Context):View(localContext){
 
@@ -63,7 +80,7 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
 
-            path.addArc(300f, 300f,500f, 500f, 270f, -359f) //from 270 to -359 start drawing from 0 angle
+            path.addArc(circleModel, 270f, -359f) //from 270 to -359 start drawing from 0 angle
 
             canvas?.drawPath(path, paintCircle)
 
@@ -106,12 +123,16 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
 
-            canvas?.drawText("$currentTime", 500f, 500f, paintText)
+            canvas?.drawText("$currentTime", circleModel.centerX(), circleModel.centerY(), paintText)
 
         }
     }
 
     init {
+
+        //TODO(replace to step when size defined)
+
+        Log.i("RoundTimer", "PROPERTY_LENGHT = $PROPERTY_LENGHT")
 
         val drawCircle = DrawCircle(localContext)
         drawCircle.startCircle(5000)
