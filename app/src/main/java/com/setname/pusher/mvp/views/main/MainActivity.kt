@@ -170,18 +170,13 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val coordinatorLayout = findViewById<CoordinatorLayout>(R.id.activity_main_parent_layout)
-
-        val drawViewLayoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
-        coordinatorLayout.addView(RoundTimer(applicationContext).apply { layoutParams = drawViewLayoutParams })
-
         /*mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
 
         mvpTabletController.startSentMessageWorker()*/
+
+        val roundTimer = RoundTimer(this)
 
     }
 
