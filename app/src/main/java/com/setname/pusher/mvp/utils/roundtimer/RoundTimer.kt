@@ -1,11 +1,14 @@
 package com.setname.pusher.mvp.utils.roundtimer
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import com.setname.pusher.R
@@ -144,16 +147,28 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
 
         private fun setTimer(duration: Long) {
 
-            val animator = ValueAnimator.ofInt((duration / 1000).toInt(), 0)
-            animator.addUpdateListener {
+            ValueAnimator.ofInt((duration / 1000).toInt(), 0).apply {
 
-                currentTime = it.animatedValue as Int
-                invalidate()
+                interpolator = LinearInterpolator()
+                this.duration = duration
 
-            }
-            animator.interpolator = LinearInterpolator()
-            animator.duration = duration
-            animator.start()
+                addUpdateListener {
+
+                    currentTime = it.animatedValue as Int
+                    invalidate()
+
+                }
+
+                addListener(object: AnimatorListenerAdapter(){
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+
+                    }
+
+                })
+
+            }.start()
 
         }
 

@@ -170,13 +170,11 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*mvpTabletController.setMessagesList()
+        mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
 
-        mvpTabletController.startSentMessageWorker()*/
-
-        val roundTimer = RoundTimer(this)
+        mvpTabletController.startSentMessageWorker()
 
     }
 
