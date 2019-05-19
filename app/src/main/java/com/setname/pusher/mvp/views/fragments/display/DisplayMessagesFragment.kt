@@ -1,8 +1,6 @@
 package com.setname.pusher.mvp.views.fragments.display
 
-import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -11,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.setname.pusher.R
 import com.setname.pusher.mvp.adapters.MessagesAdapter
+import com.setname.pusher.mvp.customviews.customsnackbar.CustomSnackbarWithTimer
 import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.swipecontroller.SwipeController
@@ -127,16 +126,16 @@ class DisplayMessagesFragment : Fragment() {
 
     private fun showUndoAlertDialog(position: Int, model: MessagesDatabaseModel) {
 
-        //TODO(set custom snackbar with timer)
+        //TODO(timer doesn't works)
 
-        Snackbar.make(this.fragmentMessagesListView, "Item was removed from the list.", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") {
+        CustomSnackbarWithTimer.make(this.fragmentMessagesListView).apply {
+            setAction("The message was deleted", View.OnClickListener {
 
-                list.add(position, model)
-                messageAdapter.notifyItemInserted(position)
-                fragment_messages_list_recycler_view.scrollToPosition(position)
+                //
 
-            }.apply { setActionTextColor(Color.YELLOW) }.show()
+            })
+            duration = 5000
+        }.show()
 
     }
 
@@ -146,7 +145,7 @@ class DisplayMessagesFragment : Fragment() {
 
     }
 
-    private fun forcePushMessage(model: MessagesDatabaseModel){
+    private fun forcePushMessage(model: MessagesDatabaseModel) {
 
         tabletPresenter.sentDataToDB(model)
 

@@ -19,7 +19,6 @@ class CustomSnackbarWithTimer(parent: ViewGroup, content: CustomSnackbarWithTime
     companion object {
 
         fun make(view: View): CustomSnackbarWithTimer {
-            // inflate custom layout
 
             val parent = view.findSuitableParent() ?: throw IllegalArgumentException(
                 "No suitable parent found from the given view. Please provide a valid view."
@@ -31,7 +30,6 @@ class CustomSnackbarWithTimer(parent: ViewGroup, content: CustomSnackbarWithTime
                 false
             ) as CustomSnackbarWithTimerView
 
-            // We create and return our Snackbar
             return CustomSnackbarWithTimer(
                 parent,
                 customView

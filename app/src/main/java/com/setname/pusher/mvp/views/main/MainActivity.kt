@@ -167,20 +167,20 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*mvpTabletController.setMessagesList()
+        mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
 
-        mvpTabletController.startSentMessageWorker()*/
+        mvpTabletController.startSentMessageWorker()
 
-        CustomSnackbarWithTimer.make(activity_main_parent_layout).apply {
+        /*CustomSnackbarWithTimer.make(activity_main_parent_layout).apply {
             setAction("The message was deleted", View.OnClickListener {
 
                 Log.i("MainArt", "message")
 
             })
-            duration = 150000
-        }.show()
+            duration = 5000
+        }.show()*/
 
     }
 

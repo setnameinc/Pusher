@@ -14,7 +14,12 @@ import android.widget.RelativeLayout
 import com.setname.pusher.R
 import java.util.logging.Logger
 
-class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
+class RoundTimerView @JvmOverloads constructor(
+    val localContext: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    val durationL:Int = 5000
+) : RelativeLayout(localContext) {
 
     //attrs from XML
     private var duration = 0
@@ -33,14 +38,15 @@ class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
     //circle figure
     private lateinit var circleModel: RectF
 
-    private val padding = 5f //equals circleStrokeWidth
+    //padding for circle view
+    private var padding = -1
 
-    //constructor for XML
-    constructor(context: Context, attrs: AttributeSet) : this(context) {
+    init {
 
         val typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RoundTimerView)
-        duration = typedArray.getInt(R.styleable.RoundTimerView_duration, 5000)
+        duration = typedArray.getInt(R.styleable.RoundTimerView_duration, durationL)
         circleStrokeWidth = typedArray.getInt(R.styleable.RoundTimerView_circle_stroke_width, 5)
+        padding = circleStrokeWidth
         typedArray.recycle()
 
     }
@@ -54,6 +60,7 @@ class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
 
         /**
          * assignments are used here, because onMeasure the size of the view is determined
+         *
          */
 
         diameterOfCircle = heightL //assign after onMeasure
@@ -73,6 +80,8 @@ class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
 
         addView(drawCircle)
         addView(drawText)
+
+        logger.info("$circleModel")
 
     }
 
@@ -169,8 +178,6 @@ class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
                 textWidth = textSizeL
                 textHeight =textSizeL
             }
-
-            Log.i("RoundTimerView", "textHeight = $textHeight")
 
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
