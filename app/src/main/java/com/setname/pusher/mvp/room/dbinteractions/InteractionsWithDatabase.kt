@@ -1,4 +1,4 @@
-package com.setname.pusher.mvp.utils.dbinteractions
+package com.setname.pusher.mvp.room.dbinteractions
 
 import android.content.Context
 import com.setname.pusher.mvp.room.app.PusherDatabase

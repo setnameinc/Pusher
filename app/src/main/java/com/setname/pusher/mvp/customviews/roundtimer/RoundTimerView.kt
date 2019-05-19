@@ -1,4 +1,4 @@
-package com.setname.pusher.mvp.utils.roundtimer
+package com.setname.pusher.mvp.customviews.roundtimer
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -7,14 +7,14 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import com.setname.pusher.R
 import java.util.logging.Logger
 
-class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
+class RoundTimerView(val localContext: Context) : RelativeLayout(localContext) {
 
     //attrs from XML
     private var duration = 0
@@ -33,18 +33,20 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
     //circle figure
     private lateinit var circleModel: RectF
 
+    private val padding = 5f //equals circleStrokeWidth
+
     //constructor for XML
     constructor(context: Context, attrs: AttributeSet) : this(context) {
 
-        val typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RoundTimer)
-        duration = typedArray.getInt(R.styleable.RoundTimer_duration, 5000)
-        circleStrokeWidth = typedArray.getInt(R.styleable.RoundTimer_circle_stroke_width, 5)
+        val typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.RoundTimerView)
+        duration = typedArray.getInt(R.styleable.RoundTimerView_duration, 5000)
+        circleStrokeWidth = typedArray.getInt(R.styleable.RoundTimerView_circle_stroke_width, 5)
         typedArray.recycle()
 
     }
 
     private val logger by lazy {
-        Logger.getLogger("RoundTimer")
+        Logger.getLogger("RoundTimerView")
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -55,7 +57,7 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
          */
 
         diameterOfCircle = heightL //assign after onMeasure
-        circleModel = RectF(0f, 0f, widthL.toFloat(), heightL.toFloat())
+        circleModel = RectF(0f + padding, 0f + padding, widthL.toFloat() - padding, heightL.toFloat() - padding)
 
         addViews()
 
@@ -81,7 +83,7 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
 
         private val paintCircle = Paint().apply {
 
-            color = Color.GRAY
+            color = Color.WHITE
             this.strokeWidth = circleStrokeWidth.toFloat()
             style = Paint.Style.STROKE
 
@@ -130,10 +132,15 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
 
     inner class DrawText(localContext: Context) : View(localContext) {
 
+        private var textWidth = -1
+        private var textHeight = -1
+
+        private val textSizeL = 40 //in pixels
+
         private val paintText = Paint().apply {
 
-            color = Color.BLACK
-            textSize = 40f
+            color = Color.WHITE
+            textSize = textSizeL.toFloat()
 
         }
 
@@ -142,6 +149,30 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
         fun startText(duration: Long) {
 
             setTimer(duration)
+
+        }
+
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+
+            val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+            val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+            val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+            val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+
+            if (widthMode == MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
+                textWidth = widthSize
+                textHeight = heightSize
+            } else if (widthMode == MeasureSpec.AT_MOST && heightMode == MeasureSpec.AT_MOST) {
+                textWidth = Math.min(textSizeL, widthSize)
+                textHeight = Math.min(textSizeL, heightSize)
+            } else {
+                textWidth = textSizeL
+                textHeight =textSizeL
+            }
+
+            Log.i("RoundTimerView", "textHeight = $textHeight")
+
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         }
 
@@ -159,7 +190,7 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
 
                 }
 
-                addListener(object: AnimatorListenerAdapter(){
+                addListener(object : AnimatorListenerAdapter() {
 
                     override fun onAnimationEnd(animation: Animator?) {
                         super.onAnimationEnd(animation)
@@ -175,7 +206,12 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
 
-            canvas?.drawText("$currentTime", circleModel.centerX(), circleModel.centerY(), paintText)
+            canvas?.drawText(
+                "$currentTime",
+                circleModel.centerX() - textWidth / 4,
+                circleModel.centerY() + textHeight / 4,
+                paintText
+            )
 
         }
     }
@@ -197,6 +233,8 @@ class RoundTimer(val localContext: Context) : RelativeLayout(localContext) {
             widthL = desiredSize
             heightL = desiredSize
         }
+
+        Log.i("RoundTimerView", "heightL = $heightL")
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 

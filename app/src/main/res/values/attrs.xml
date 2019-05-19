@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="RoundTimer">
+    <declare-styleable name="RoundTimerView">
 
         <attr name="duration" format="integer"/>
         <attr name="circle_stroke_width" format="integer"/>

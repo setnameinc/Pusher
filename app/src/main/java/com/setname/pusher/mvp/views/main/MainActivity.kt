@@ -1,13 +1,14 @@
 package com.setname.pusher.mvp.views.main
 
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.ViewGroup
+import android.view.View
+import androidx.work.*
 import com.setname.pusher.R
 import com.setname.pusher.mvp.controllers.fragments.main.MVPTabletController
+import com.setname.pusher.mvp.customviews.customsnackbar.CustomSnackbarWithTimer
 import com.setname.pusher.mvp.interfaces.InteractionsMainActivity
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.workers.SentMessageWorker
@@ -15,8 +16,6 @@ import com.setname.pusher.mvp.views.fragments.create.CreateMessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
-import androidx.work.*
-import com.setname.pusher.mvp.utils.roundtimer.RoundTimer
 
 class MainActivity : AppCompatActivity(), InteractionsMainActivity {
 
@@ -90,11 +89,9 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
                 State.CANCELLED -> {
 
 
-
                 }
 
                 else -> {
-
 
 
                 }
@@ -170,11 +167,20 @@ class MainActivity : AppCompatActivity(), InteractionsMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mvpTabletController.setMessagesList()
+        /*mvpTabletController.setMessagesList()
 
         setButtonToCreateMessageFragment()
 
-        mvpTabletController.startSentMessageWorker()
+        mvpTabletController.startSentMessageWorker()*/
+
+        CustomSnackbarWithTimer.make(activity_main_parent_layout).apply {
+            setAction("The message was deleted", View.OnClickListener {
+
+                Log.i("MainArt", "message")
+
+            })
+            duration = 150000
+        }.show()
 
     }
 

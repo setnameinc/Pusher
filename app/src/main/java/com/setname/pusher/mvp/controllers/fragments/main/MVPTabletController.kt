@@ -7,9 +7,8 @@ import com.setname.pusher.mvp.presenters.main.TabletPresenter
 import com.setname.pusher.mvp.retfrofit.PushoverClient
 import com.setname.pusher.mvp.room.models.MessagesDatabaseModel
 import com.setname.pusher.mvp.utils.context.AppContext
-import com.setname.pusher.mvp.utils.dbinteractions.InteractionsWithDatabase
+import com.setname.pusher.mvp.room.dbinteractions.InteractionsWithDatabase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch

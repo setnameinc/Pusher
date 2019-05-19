@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorBackgroundFragments">#FAFAFA</color>
+    <color name="snackbar_with_time_background">#212121</color>
+    <color name="snackbar_with_time_undo">#FFFF00</color>
+    <color name="snackbar_with_time_message">#FFFFFF</color>
 </resources>
