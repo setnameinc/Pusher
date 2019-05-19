@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.setname.pusher.mvp.customviews.customsnackbar.CustomSnackbarWithTimerView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.setname.pusher.mvp.customviews.customsnackbar.CustomSnackbarWithTimerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

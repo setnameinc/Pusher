@@ -2,6 +2,7 @@ package com.setname.pusher.mvp.customviews.customsnackbar
 
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +46,7 @@ class CustomSnackbarWithTimer(parent: ViewGroup, content: CustomSnackbarWithTime
         val textView = customSnackbarWithTimerView.textView
         textView.text = str
 
-        if (str.isNotEmpty()){
+        if (str.isNotEmpty()) {
 
             customSnackbarWithTimerView.action.setOnClickListener {
 
@@ -55,8 +56,6 @@ class CustomSnackbarWithTimer(parent: ViewGroup, content: CustomSnackbarWithTime
             }
 
         }
-
-
 
         return this
     }

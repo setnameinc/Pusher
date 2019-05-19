@@ -15,10 +15,10 @@ import com.setname.pusher.R
 import java.util.logging.Logger
 
 class RoundTimerView @JvmOverloads constructor(
-    val localContext: Context,
+    private val localContext: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    val durationL:Int = 5000
+    private val durationL: Int = 5000
 ) : RelativeLayout(localContext) {
 
     //attrs from XML
@@ -81,14 +81,16 @@ class RoundTimerView @JvmOverloads constructor(
         addView(drawCircle)
         addView(drawText)
 
-        logger.info("$circleModel")
+        logger.info("Views added")
 
     }
 
     inner class DrawCircle(localContext: Context) : View(localContext) {
 
         //circle length
-        private var currentLength = diameterOfCircle * Math.PI.toFloat()
+        private var currentCircleLength = diameterOfCircle * Math.PI.toFloat()
+
+        private val path = Path()
 
         private val paintCircle = Paint().apply {
 
@@ -104,6 +106,8 @@ class RoundTimerView @JvmOverloads constructor(
 
         private fun setAnimRound(duration: Long) {
 
+            Log.i("RoundTimerView", "circle | len = $currentCircleLength, circleStrokeWidth = $circleStrokeWidth")
+
             ObjectAnimator.ofFloat(this, "length", 0f, 1f)
                 .apply {
                     this.duration = duration
@@ -115,7 +119,7 @@ class RoundTimerView @JvmOverloads constructor(
         //underhood fun
         private fun setLength(length: Float) {
             paintCircle.pathEffect =
-                createPathEffect(currentLength, length, 0.0f) //offset it's by how much it does not finished
+                createPathEffect(currentCircleLength, length, 0.0f) //offset it's by how much it does not finished
             invalidate()
         }
 
@@ -126,7 +130,6 @@ class RoundTimerView @JvmOverloads constructor(
             )
         }
 
-        private val path = Path()
 
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
@@ -159,6 +162,7 @@ class RoundTimerView @JvmOverloads constructor(
 
             setTimer(duration)
 
+
         }
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -176,8 +180,10 @@ class RoundTimerView @JvmOverloads constructor(
                 textHeight = Math.min(textSizeL, heightSize)
             } else {
                 textWidth = textSizeL
-                textHeight =textSizeL
+                textHeight = textSizeL
             }
+
+            Log.i("RoundTimerView", "text | textWidth = $textWidth, textHeight = $textHeight")
 
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 

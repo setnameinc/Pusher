@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,8 @@ class DisplayMessagesFragment : Fragment() {
         setSwipeRefreshListener()
         attachSwipeListener()
 
+       /* testUndoAlertDialog()*/
+
     }
 
     private fun attachSwipeListener() {
@@ -66,7 +69,8 @@ class DisplayMessagesFragment : Fragment() {
 
             override fun delete(pos: Int) {
 
-                deleteItemWithTimer(pos)
+                /*deleteItemWithTimer(pos)*/
+                testUndoAlertDialog()
 
             }
         })
@@ -127,6 +131,19 @@ class DisplayMessagesFragment : Fragment() {
     private fun showUndoAlertDialog(position: Int, model: MessagesDatabaseModel) {
 
         //TODO(timer doesn't works)
+
+        CustomSnackbarWithTimer.make(this.fragmentMessagesListView).apply {
+            setAction("The message was deleted", View.OnClickListener {
+
+                //
+
+            })
+            duration = 5000
+        }.show()
+
+    }
+
+    private fun testUndoAlertDialog(){
 
         CustomSnackbarWithTimer.make(this.fragmentMessagesListView).apply {
             setAction("The message was deleted", View.OnClickListener {

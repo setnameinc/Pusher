@@ -7,6 +7,7 @@ import android.support.design.widget.BaseTransientBottomBar
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.SnackbarContentLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.setname.pusher.R
-
+import com.setname.pusher.mvp.customviews.roundtimer.RoundTimerView
 
 
 class CustomSnackbarWithTimerView @JvmOverloads constructor(
@@ -28,9 +29,12 @@ class CustomSnackbarWithTimerView @JvmOverloads constructor(
 
     init {
 
+        Log.i("CustomSnack", "context")
+
         View.inflate(context, R.layout.custom_view_snackbar_with_timer, this)
         this.textView = findViewById(R.id.custom_view_snackbar_with_timer_text)
         this.action = findViewById(R.id.custom_view_snackbar_with_timer_button_undo)
+
         clipToPadding = false
 
     }
